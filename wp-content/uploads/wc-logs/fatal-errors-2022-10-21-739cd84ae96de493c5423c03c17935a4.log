@@ -1,0 +1,241 @@
+2022-10-21T02:42:03+00:00 CRITICAL Uncaught Exception: Table 'lizado.crawl_products' doesn't exist query: SELECT  * FROM crawl_products WHERE  wordpress_post_id = ?  LIMIT 1 in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\MysqliDb.php:1996
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\MysqliDb.php(1584): MysqliDb->_prepareQuery()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\MysqliDb.php(734): MysqliDb->_buildQuery(1)
+#2 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\MysqliDb.php(760): MysqliDb->get('crawl_products', 1, '*')
+#3 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\WoocommerceHelper.php(259): MysqliDb->getOne('crawl_products')
+#4 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\includes\class-wc-product-advanced.php(23): WoocommerceHelper::get_system_product(669, Array)
+#5 C:\laragon\www\lizado\wp-content\plugins\woocommerce\includes\abstracts\abstract-wc-product.php(1612): WC_Product_Advanced->get_price()
+#6 C:\laragon\www\lizado\wp-content\plugins\woocommerce\includes\wc-template-functions.php(686): WC_Product->is_purchasable()
+#7 C:\laragon\www\lizado\wp-content\plugins\woocommerce\includes\wc-template-functions.php(727): wc_get_product_class(Array, Object(WC_Product_Advanced))
+#8 C:\laragon\www\lizado\wp-content\themes\flatsome\woocommerce\content-product.php(38): wc_product_class(Array, Object(WC_Product_Advanced))
+#9 C:\laragon\www\lizado\wp-includes\template.php(772): require('C:\\laragon\\www\\...')
+#10 C:\laragon\www\lizado\wp-content\plugins\woocommerce\includes\wc-core-functions.php(284): load_template('C:\\laragon\\www\\...', false)
+#11 C:\laragon\www\lizado\wp-content\themes\flatsome\inc\shortcodes\ux_products.php(263): wc_get_template_part('content', 'product')
+#12 C:\laragon\www\lizado\wp-includes\shortcodes.php(356): ux_products(Array, '', 'ux_products')
+#13 [internal function]: do_shortcode_tag(Array)
+#14 C:\laragon\www\lizado\wp-includes\shortcodes.php(228): preg_replace_callback('/\\[(\\[?)(title|...', 'do_shortcode_ta...', '\n[title text="T...')
+#15 C:\laragon\www\lizado\wp-content\themes\flatsome\inc\shortcodes\row.php(216): do_shortcode('\n[title text="T...')
+#16 C:\laragon\www\lizado\wp-includes\shortcodes.php(356): ux_col(Array, '\n[title text="T...', 'col')
+#17 [internal function]: do_shortcode_tag(Array)
+#18 C:\laragon\www\lizado\wp-includes\shortcodes.php(228): preg_replace_callback('/\\[(\\[?)(col|ti...', 'do_shortcode_ta...', '\n[col span__sm=...')
+#19 C:\laragon\www\lizado\wp-content\themes\flatsome\inc\shortcodes\row.php(79): do_shortcode('\n[col span__sm=...')
+#20 C:\laragon\www\lizado\wp-includes\shortcodes.php(356): ux_row(Array, '\n[col span__sm=...', 'row')
+#21 [internal function]: do_shortcode_tag(Array)
+#22 C:\laragon\www\lizado\wp-includes\shortcodes.php(228): preg_replace_callback('/\\[(\\[?)(col|ro...', 'do_shortcode_ta...', '\t<section class...')
+#23 C:\laragon\www\lizado\wp-content\themes\flatsome\inc\shortcodes\sections.php(237): do_shortcode('\t<section class...')
+#24 C:\laragon\www\lizado\wp-includes\shortcodes.php(356): ux_section(Array, '\t<section class...', 'section')
+#25 [internal function]: do_shortcode_tag(Array)
+#26 C:\laragon\www\lizado\wp-includes\shortcodes.php(228): preg_replace_callback('/\\[(\\[?)(ux_pro...', 'do_shortcode_ta...', '[section paddin...')
+#27 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): do_shortcode('[section paddin...')
+#28 C:\laragon\www\lizado\wp-includes\plugin.php(191): WP_Hook->apply_filters('[section paddin...', Array)
+#29 C:\laragon\www\lizado\wp-includes\post-template.php(253): apply_filters('the_content', '[section paddin...')
+#30 C:\laragon\www\lizado\wp-content\themes\flatsome-child\page.php(34): the_content()
+#31 C:\laragon\www\lizado\wp-includes\template-loader.php(106): include('C:\\laragon\\www\\...')
+#32 C:\laragon\www\lizado\wp-blog-header.php(19): require_once('C:\\laragon\\www\\...')
+#33 C:\laragon\www\lizado\index.php(17): require('C:\\laragon\\www\\...')
+#34 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\helpers\MysqliDb.php on line 1996
+
+2022-10-21T03:16:00+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:292
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 292
+
+2022-10-21T03:18:28+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:292
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 292
+
+2022-10-21T03:20:48+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:292
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 292
+
+2022-10-21T03:24:00+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:294
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 294
+
+2022-10-21T03:26:45+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:294
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 294
+
+2022-10-21T03:30:58+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:294
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 294
+
+2022-10-21T03:33:10+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:294
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 294
+
+2022-10-21T03:34:06+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:294
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 294
+
+2022-10-21T03:35:55+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:294
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 294
+
+2022-10-21T03:54:46+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T03:55:19+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T03:58:26+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T04:30:04+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T04:31:11+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T04:32:38+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T04:33:59+00:00 CRITICAL Uncaught Error: Cannot use object of type WP_Error as array in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:299
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#2 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#4 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#5 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#6 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 299
+
+2022-10-21T08:14:27+00:00 CRITICAL Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:440
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php(315): ApiController->events(Array)
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#2 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#4 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#5 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#6 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#7 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 440
+
+2022-10-21T08:17:02+00:00 CRITICAL Uncaught TypeError: Cannot access offset of type string on string in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php:444
+Stack trace:
+#0 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php(315): ApiController->events(Array)
+#1 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(126): ApiController->sync()
+#2 C:\laragon\www\lizado\wp-content\plugins\lizado-crm\core\app.php(41): App->start('http://lizado.t...')
+#3 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(307): App->ajax('')
+#4 C:\laragon\www\lizado\wp-includes\class-wp-hook.php(331): WP_Hook->apply_filters('', Array)
+#5 C:\laragon\www\lizado\wp-includes\plugin.php(476): WP_Hook->do_action(Array)
+#6 C:\laragon\www\lizado\wp-admin\admin-ajax.php(202): do_action('wp_ajax_nopriv_...')
+#7 {main}
+  thrown in C:\laragon\www\lizado\wp-content\plugins\lizado-crm\app\controllers\ApiController.php on line 444
+
+2022-10-21T12:54:24+00:00 CRITICAL LiteSpeed\Control::finalize(): Cannot use output buffering in output buffering display handlers in C:\laragon\www\lizado\wp-content\plugins\wordpress-seo\src\conditionals\settings-conditional.php on line 1
+
