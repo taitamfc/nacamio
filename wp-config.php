@@ -30,6 +30,7 @@ if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
     define( 'DB_NAME', 'naca_wp' );
     define( 'DB_USER', 'naca_wp' );
     define( 'DB_PASSWORD', 'devcode15' );
+    define( 'DB_HOST', 'localhost' );
 }
 
 /** Database charset to use in creating database tables. */
@@ -87,10 +88,9 @@ $table_prefix = 'wp_';
  *
  * @link https://wordpress.org/support/article/debugging-in-wordpress/
  */
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
-// Disable display of errors and warnings
-define( 'WP_DEBUG_DISPLAY', true );
+define( 'WP_DEBUG', false );
+// define( 'WP_DEBUG_LOG', true );
+// define( 'WP_DEBUG_DISPLAY', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
