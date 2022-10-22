@@ -1,0 +1,349 @@
+.updates-tips span i.fa-refresh {
+    margin-right: 10px;
+}
+.updates-tips span.update-icon {
+    display: flex;
+    align-items: center;
+}
+.action-xem-them .xem-them {
+    text-align: center;
+    border-radius: 5px;
+    border:  1px solid #ddd;
+    padding: 15px;
+    width: 100%;
+    outline: none;
+    background: unset;
+    display: block;
+    font-size: 14px;
+    cursor: pointer;
+    color: #8d8d8d;
+}
+
+.action-xem-them .xem-them:hover {
+    background-color: #1877f2;
+    color: #fff;
+    border:  1px solid #1877f2;
+}
+.action-xem-them button i {
+    margin-left: 5px;
+}
+
+.action-xem-them button:hover i {
+    color: #fff;
+}
+.table-tips {
+    margin-top: 20px;
+}
+.table-tips table .fc-name-tips {
+    font-size: 15px;
+    font-weight: 700;
+}
+.table-tips table .name-tournament {
+    font-size: 14px;
+    color: #8d8d8d;
+}
+.table-tips table tr th {
+    background: #f2f2f2;
+    padding: 17px 10px !important;
+}
+.table-tips table tr th ,.table-tips table tr td {
+    border: none !important;
+}
+body .main-content .table-tips table th.th-time,
+body .main-content .table-tips table th.th-odds,
+body .main-content .table-tips table th.th-result,
+body .main-content .table-tips table th.th-status {
+    vertical-align: middle;
+    text-align: center;
+}
+body .main-content .table-tips table td.td-time,
+body .main-content .table-tips table td.td-odds,
+body .main-content .table-tips table td.td-result,
+body .main-content .table-tips table td.td-status {
+    text-align: center;
+}
+
+.table-tips table th.th-time {
+    min-width: 115px;
+    max-width: 115px;
+}
+.table-tips th.th-match.bxleft {
+    min-width: 210px;
+}
+.table-tips th.th-tips {
+    min-width: 200px;
+}
+.table-tips th.th-odds {
+	min-width: 100px;
+}
+.table-tips th.th-odds {
+    min-width: 60px;
+}
+.table-tips th.th-premium.bxleft {
+    min-width: 180px;
+    max-width: 180px;
+}
+.table-tips table tr td {
+    vertical-align: middle;
+}
+.table-tips table td:first-child {
+    text-align: center;
+}
+.table-tips table td .td-tips {
+    padding: 5px 10px !important;
+    border: 1px dashed #3452ff;
+    border-radius: 5px;
+    color: #000;
+}
+/*.table-tips table td .td-tips span {
+    padding: 5px 10px;
+    border: 1px dashed #3452ff;
+    border-radius: 5px;
+    color: #000;
+}*/
+.table-tips table td a .img-premium {
+    background-image: url('../images/premium-bg.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}
+.table-tips table td a .img-premium::before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+.link-premium {
+    display: flex;
+    align-items: center;
+}
+.table-tips table tr td .status-tips {
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.table-tips table tr td.td-time span {
+    display: block;
+}
+.table-tips table tr td .status-tips.status-win {
+    color: #f12a2a;
+    border:  1px solid #f12a2a;
+}
+.table-tips table tr td .status-tips.status-draw {
+    color: #6198f5;
+    border:  1px solid #6198f5;
+}
+.table-tips table tr td .reviews {
+    margin-left: 17px;
+}
+.table-tips table tr td .reviews span.selected {
+    color: #ababab;
+}
+.table-tips table tr td .reviews span:last-child {
+    margin-right: 0px;
+}
+.table-tips table tr td .reviews span {
+    color: #d6d6d6;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+
+/*respinsive table*/
+@media all and (max-width:  999px) {
+    .table-tips table .fc-name-tips {
+        font-size: 13px;
+    }
+    .table-tips table .name-tournament {
+        font-size: 12px;
+    }
+    .table-tips table th.th-time {
+        min-width: 60px;
+        max-width: 60px;
+    }
+    .table-tips table th.th-match {
+        min-width: 145px;
+        max-width: 145px;
+    }
+    .table-tips table th.th-tips {
+        min-width: 145px;
+        max-width: 145px;
+    }
+    .table-tips table tr th {
+        padding: 17px 5px !important;
+        font-size: 13px;
+    }
+    .table-tips table td .td-tips {
+        font-size: 13px;
+    }
+    .table-tips table tr td {
+        padding: 15px 5px !important;
+    }
+}
+
+@media all and (max-width:  767px) {
+    .table-tips table th.th-tips {
+        min-width: 135px;
+        max-width: 135px;
+    }
+   .table-tips th.th-match.bxleft {
+        min-width: 130px;
+    }
+    .table-tips table th.th-premium {
+        min-width: 140px;
+        max-width: 140px;
+    }
+    .table-tips table td .td-tips {
+        font-size: 12px;
+        padding: 5px;
+    }
+    .link-premium {
+        font-size: 12px;
+    }
+    .table-tips table tr .th-odds,.table-tips table tr .td-odds,
+    .table-tips table tr .th-status,.table-tips table tr .td-status {
+        display: none;
+    }
+    .bxbo_tt_inner.bx-tong-hop-wbsite {
+        padding: 15px;
+    }
+}
+@media all and (max-width:  650px) {
+    .fc-name-tips span {
+        display: block;
+    }
+    .table-tips th.th-premium.bxleft {
+        min-width: 60px;
+        max-width: 60px;
+    }
+    .table-tips table th.th-tips {
+        min-width: 150px;
+        max-width: 150px;
+    }
+}
+@media all and (max-width:  550px) {
+    .link-premium {
+        justify-content: center;
+    }
+     .table-tips table th.th-result,.table-tips table .td-result {
+        display: none;
+     }
+    .table-tips table tr th {
+        font-size: 12px;
+    }
+    .table-tips .td-time span {
+        font-size: 10px;
+    }
+   
+    .table-tips table th.th-time {
+        min-width: 30px;
+        max-width: 30px;
+    }
+    .table-tips table tr th {
+        padding: 10px 5px !important;
+    }
+    #tong-hop-website .bx-tong-hop-wbsite ul li a {
+        padding: 7px 15px;
+    }
+    #tong-hop-website .bx-tong-hop-wbsite ul li {
+        margin-bottom: 15px;
+        margin-right: 10px;
+    }
+    
+}
+@media all and (max-width:  500px) {
+    .table-tips table td .td-tips {
+        font-size: 10px;
+        padding: 5px !important;
+    }
+    .table-tips table tr td.td-time {
+        font-size: 12px;
+    }
+     .table-tips table td .td-tips span {
+        display: block;
+        text-align: center;
+    }
+    .table-tips table .fc-name-tips {
+        font-size: 12px;
+    }
+    .table-tips th.th-match.bxleft {
+       min-width: 50px;
+    }
+    .link-premium {
+        font-size: 12px;
+        word-break: break-all;
+        align-items: flex-start;
+    }
+    .link-premium i {
+        margin-top: 5px;
+    }
+    .table-tips table th.th-match {
+        min-width: 90px;
+        max-width: 90px;
+    }
+    .table-tips table th.th-tips {
+        min-width: 130px;
+        max-width: 130px;
+    }
+    .table-tips table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+    .bxlistbytax_bottom .thumb {
+        height: 100px;
+    }
+    .table-tips table th.th-premium {
+        min-width: 50px;
+        max-width: 50px;
+    }
+    
+}
+@media all and (max-width:  430px) {
+    
+}
+@media all and (max-width:  400px) {
+    .table-tips table th.th-tips {
+        min-width: 130px;
+        max-width: 130px;
+    }
+    .table-tips table tr td .reviews span {
+        font-size: 8px;
+    }
+    .table-tips table .name-tournament {
+        font-size: 10px;
+    }
+    .table-tips table td .td-tips {
+        padding: 5px !important;
+        font-size: 10px;
+    }
+    .table-tips table td a .img-premium {
+        width: 9px;
+        height: 9px;
+    }
+    .link-premium {
+        font-size: 10px;
+    }
+    .table-tips table th.th-match {
+        min-width: 60px;
+        max-width: 60px;
+    }
+    .table-tips table tr td.td-time {
+        font-size: 10px;
+    }
+    .table-tips table .fc-name-tips {
+        font-size: 10px;
+    }
+    .table-tips .td-time .league {
+        font-size: 10px;
+    }
+}
+@media all and (max-width:  330px) {
+    .table-tips table th.th-tips {
+        min-width: 130px;
+        max-width: 130px;
+    }
+}
+

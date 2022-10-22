@@ -1,0 +1,26 @@
+<?php
+class OptionsController extends CRController {
+    function __construct(){
+
+    }
+    public function index( $pass = '' ) {
+		if( count($_POST) ){
+           $this->_handle_submit( $_POST );
+        }
+
+        $params = [
+            'toolbar' => [
+                'title' => 'Cấu Hình',
+            ]
+        ];
+        $this->setView('Options/index',$params);
+    }
+
+    private function _handle_submit( $data ){
+
+        update_option('tool_crawl_option_cookie',$data['tool_crawl_option_cookie']);
+		file_put_contents( ROOT . '/core/helpers/cookies-153-126-211-218.txt', $data['tool_crawl_option_cookie'] );
+        $this->redirect( AppUrlHelper::build([ 'controller' => 'options']) );
+        die();
+    }
+}

@@ -1,0 +1,554 @@
+<?php
+class ProductModel {
+    private $_table       = '';
+    function __construct(){
+        global $wpdb;
+        $this->_table = $wpdb->prefix.'crawl_products';
+        $this->_table2 = $wpdb->prefix.'crawl_prepares';
+        $this->_table2 = $wpdb->prefix.'crawl_products';
+    }
+    public function getAll(){
+        
+        $post_string = '
+        {
+			"ph"	: "1",
+			"delid"	:"0",
+			"add_code_id"	:"0",
+			"del_code_id"	:"0",
+			"upd_code_name_flg"	:"0",
+			"set_f_deny"	:"0",
+			"scrolly"	:"0",
+			"qr_sortkey"	:"d02name",
+			"qr_siteid"	:"0",
+			"qr_category"	:"0",
+			"qr_buy_sale_kbn"	:"0",
+			"qr_keyword1"	:"",
+			"qr_keyword2"	:"",
+			"qr_code"	:"",
+			"qr_pic_code"	:"",
+			"qr_rarity_s"	:"",
+			"qr_price"	:"",
+			"qr_stock"	:"",
+			"qr_quality"	:"",
+			"qr_other_factor"	:"",
+			"qr_mst_kataban"	:"1"
+        }
+        ';
+
+        $post_data = json_decode($post_string,true);
+        $post_data['page'] = ( isset($_REQUEST['page']) ) ? $_REQUEST['page'] : get_option('cron_craw_product',1);
+        $post_data['page'] = get_option('cron_craw_product',1);
+		
+
+
+        $objCurl = new cUrl();
+        $respon = $objCurl->custom_curl('http://153.126.211.218:8112/ndaja/view_data2.cgi',$post_data,'cookies-153-126-211-218.txt');
+		
+
+
+        $html   = str_get_html($respon);
+		
+		if( !$respon || ($html && count(  $html->find('.pubTable') ) == 0 ) ){
+			wp_mail( get_option('admin_email') , "Crawl data warning", "Cookie is expired !");
+			$return = [
+                'page'      => 1,
+                'status'    => -1,
+                'msg'    	=> 'Cookie expried',
+            ];
+			echo json_encode($return);
+			die();
+		}
+
+        $th_data = [];
+        foreach( $html->find('.pubTable thead th') as $th ){
+            $children = $th->children; // get an array of children
+            foreach ($children AS $child) {
+                $child->outertext = ''; // This removes the element, but MAY NOT remove it from the original $myDiv
+            }
+            $th_data[] = trim($th->innertext);
+        }
+
+        $tr_data = [];
+
+        
+        if( count( $html->find('.pubTable tbody tr') ) ){
+            foreach( $html->find('.pubTable tbody tr') as $key => $tr ){
+                $tr_data[$key] = [];
+                foreach( $tr->find('td') as $key_td => $td ){
+                    
+                    if( $key_td == 0 ){
+                        continue;
+                    }
+                    switch ($key_td) {
+                        case 1:
+                            $key_label = 'data_title';
+                            if( count( $td->find('.cau_msg') ) ){
+                                $value = $td->find('.cau_msg',0)->innertext;
+                            }
+                            
+                            break;
+                        case 2:
+                            $key_label = 'product_name';//商品名：tên sản phẩm
+                            $value = $td->find('input',0)->outertext;
+							$pattern = '/value="(.*?)"/i';
+							preg_match($pattern, $value, $matches);
+							$value = $matches[1];
+
+                            break;
+                        case 3:
+                            $key_label = 'en_product_name';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 4:
+                            $key_label = 'attribute';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 5:
+                            $key_label = 'level';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 6:
+                            $key_label = 'race';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 7:
+                            $key_label = 'attack_power';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 8:
+                            $key_label = 'defensive_power';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 9:
+                            $key_label = 'product_number';//型番: số hiệu
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 10:
+                            $key_label = 'image_number';//画像型番:số hiệu ảnh
+                            $value = $td->find('input',0)->attr['value'];
+							$value = strip_tags($value);
+                            break;
+                        case 11:
+                            $key_label = 'image_url';//
+                            $value = $td->innertext;
+							 $value = strip_tags($value);
+                            break;
+                        case 12:
+                            $key_label = 'omission';//
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 13:
+                            $key_label = 'store_name';//店名：tên cửa hàng
+                            $value = $td->innertext;
+                            $value = strip_tags($value);
+                            break;
+                        case 14:
+                            $key_label = 'sell_buy';//区分：phân loại( sell/buy)
+                            $value = $td->innertext;
+                            $value = strip_tags($value);
+                            break;
+                        case 15:
+                            $key_label = 'category';//カテゴリ:categori
+                            $value = $td->innertext;
+                            $value = strip_tags($value);
+                            break;
+                            break;
+                        case 16:
+                            $key_label = 'store_link';//Store Link:store_link
+                            $value = $td->find('a',0)->attr['href'];
+                            $value = strip_tags($value);
+                            break;
+                        case 17:
+                            $key_label = 'price';//値段:giá
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 18:
+                            $key_label = 'stock';//在庫数： tồn kho
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 19:
+                            $key_label = 'quality';//品質：chất lượng (cột M trong csv)
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        case 20:
+                            $key_label = 'other_factory';
+                            $value = $td->find('input',0)->attr['value'];
+                            break;
+                        default:
+                            $key_label = $key_td;
+                            if( $td->find('input',0) ){
+                                $value = $td->find('input',0)->attr['value'];
+                                $value = strip_tags($value);
+                            }else{
+                                $value = $td->innertext;
+                                $value = strip_tags($value);
+                            }
+                            break;
+                    }
+        
+                    if($key_td == 1){
+                        $tr_data[$key]['product_id'] = str_replace('元ID:','',$td->find('a',0)->innertext);
+                    }
+        
+                    $tr_data[$key][$key_label] = $value;
+        
+                    
+                }
+            }
+        }
+		
+
+		$product_ids = [];
+		$product_data = [];
+        if( count($tr_data) ){
+            foreach( $tr_data as $data ){
+				foreach( $data as $k => $v ){
+					$data[$k] = trim($v);
+				}
+				$product_ids[] = $data['product_id'];
+				unset($data[21]);
+                unset($data[22]);
+				$product_data[] = $data;
+            }
+			
+			//remove $product_ids
+			global $AppDB;
+			$AppDB->where('product_id',$product_ids,'IN');
+			$AppDB->delete($this->_table2);
+			
+			//insert to db
+			foreach( $product_data as $data ){
+				$data['price'] = str_replace('円','',$data['price']);
+                $data['price'] = str_replace(',','',$data['price']);
+				$this->insertData( $data );
+            }
+
+            $return = [
+                'page'      => $post_data['page'] + 1,
+                'status'    => 1,
+            ];
+
+            update_option('cron_craw_product',(int)$post_data['page'] + 1);
+        }else{
+			
+			
+			
+			update_option('cron_craw_product',1);
+			update_option('cron_do_step',2);
+            $return = [
+                'page'      => 1,
+                'status'    => 0,
+            ];
+        }
+        
+        echo json_encode($return);
+        die();
+    }
+
+    function deleteRemovedItems(){
+		global $AppDB;
+		global $wpdb;
+		
+		$AppDB->where('status',2);
+		$removeItems = $AppDB->get($this->_table,null,['product_id','image_number']);
+
+		if( $removeItems && count($removeItems) ){
+			$image_numbers = [];
+			$product_ids = [];
+			foreach( $removeItems as $removeItem ){
+				$product_ids[] = $removeItem['product_id'];
+				$image_numbers[] = $removeItem['image_number'];
+			}
+			
+			// $AppDB->where('product_id',$product_ids,'IN');
+			// //delete crawl_prepares
+			// $AppDB->delete($this->_table2);
+			
+			//delete crawl_products
+			if( $product_ids && count($product_ids) ){
+				// $AppDB->where('product_id',$product_ids,'IN');
+				// $AppDB->delete($this->_table);
+				
+				$sql = "DELETE FROM {$wpdb->prefix}crawl_products WHERE product_id IN ( ".implode(',',$product_ids)." )";
+				$wpdb->query($sql);
+			}
+			
+			//delete posts
+			$tbl_postmeta = $wpdb->prefix.'postmeta';
+			$AppDB->where('meta_key','image_number');
+			$AppDB->where('meta_value',$image_numbers,'IN');
+			$post_metas = $AppDB->get($tbl_postmeta,null,['post_id']);
+			
+			$post_ids = [];
+			foreach( $post_metas as $post_meta ){
+				$post_ids[] = $post_meta['post_id'];
+			}
+			
+			//do delete posts
+			if( $post_ids && count($post_ids) ){
+				$tbl_posts = $wpdb->prefix.'posts';
+				$sql = "DELETE FROM {$wpdb->prefix}posts WHERE ID IN ( ".implode(',',$post_ids)." )";
+				$wpdb->query($sql);
+				// $AppDB->where('ID',$post_ids,'IN');
+				// $AppDB->delete($tbl_posts);
+				
+				//do delete postmeta
+				// $AppDB->where('post_id',$post_ids,'IN');
+				// $AppDB->delete($tbl_postmeta);
+				
+				$sql = "DELETE FROM {$tbl_postmeta} WHERE post_id IN ( ".implode(',',$post_ids)." )";
+				$wpdb->query($sql);
+			}
+			
+			
+		}
+		
+		
+	}
+    function checkDataExist($product_id){
+        global $AppDB;
+        $AppDB->where('product_id',$product_id);
+        $row = $AppDB->getOne ($this->_table,'product_id');
+        return $row['product_id'];
+    }
+    function checkDataExistByName($product_name){
+        global $AppDB;
+        $AppDB->where('product_name',$product_name);
+        $row = $AppDB->getOne ($this->_table,'product_id');
+        return $row['product_id'];
+    }
+
+    function updateData($product_id,$data){
+        global $AppDB;
+        $AppDB->where('product_id',$product_id);
+        $AppDB->update ($this->_table, $data);
+    }
+
+    function insertData($data){
+        global $AppDB;
+        $AppDB->insert ($this->_table, $data);
+    }
+
+    function insertProductWp($product){
+        $post_id = $this->wpCheckDataExist($product['product_number']);
+        $this->wpInsertData( $product, $post_id );
+    }
+
+    function wpCheckDataExist( $product_number ){
+        //check post exists
+        global $wpdb;
+        $tbl = $wpdb->prefix.'postmeta';
+        $get_value = $wpdb->get_row( "SELECT post_id FROM $tbl where meta_key ='product_number' and meta_value = '$product_number'" );
+        
+        if( $get_value ){
+           return $get_value->post_id;
+        }
+   
+        return false;
+   }
+   
+	function cmpDESC($a, $b)
+	{
+		if ($a['price'] == $b['price']) {
+			return 0;
+		}
+		return ($a['price'] > $b['price']) ? -1 : 1;
+	}
+	function cmpASC($a, $b)
+	{
+		if ($a['price'] == $b['price']) {
+			return 0;
+		}
+		return ($a['price'] < $b['price']) ? -1 : 1;
+	}
+
+	function wpInsertData( $data , $post_id = 0 ){
+		global $AppDB;
+       if( $data['product_name'] ){
+           $title = $data['product_name'];
+       }else{
+           $title = 'Product ID #'.$data['product_id'];
+       }
+	   
+	   $title = str_replace('【-】','',$title);
+	   $title = trim($title);
+	   
+	   $data['price'] = str_replace(',','',$data['price']);
+	   
+	
+       
+       $product_args = [
+           'post_title' => $title,
+           'post_status' => 'publish',
+           'post_type' => 'product',
+           'post_author' => 1
+       ];
+		
+		if( $post_id ){
+			$product_args['ID'] =  $post_id;
+			wp_update_post( $product_args );
+		}else{
+			$post_id = wp_insert_post( $product_args );
+		}
+        
+       
+       //product_cat
+       $term = term_exists( $data['category'], 'product_cat' );
+       if( !$term && $data['category'] ){
+           $term_id = wp_insert_term(
+               $data['category'],
+               'product_cat'
+           );
+       }else{
+           $term_id = $term['term_id'];
+       }
+       if($data['category']){
+           wp_set_object_terms( $post_id, (int)$term_id,'product_cat' );
+       }
+      
+   
+       //product_label
+       if( strpos($data['quality'],'MTG') !== false){
+           $data['quality'] = 'HP';
+       }
+       $term = term_exists( $data['quality'], 'product_label' );
+       if( !$term && $data['quality']){
+           $term_id = wp_insert_term(
+               $data['quality'],
+               'product_label'
+           );
+       }else{
+           $term_id = $term['term_id'];
+       }
+       if($data['quality']){
+           wp_set_object_terms( $post_id, (int)$term_id,'product_label' );
+       }
+	   
+	   //delete meta before new
+	    $myvals = get_post_meta($post_id);
+		foreach($myvals as $key=>$val)  {
+			delete_post_meta($post_id, $key);
+		}
+       
+   
+       //update meta
+       $metas = [
+           'data_title',
+           'product_number',
+           'image_number',
+           'image_url',
+           'store_name',
+           'store_link',
+           'sell_buy',
+           'stock',
+           'quality',
+           'other_factory', 
+       ];
+       foreach( $metas as $meta ){
+           update_post_meta($post_id,$meta,$data[$meta]);
+       }
+       update_post_meta($post_id,'mt_product_id',$data['product_id']);
+       update_post_meta($post_id,'regular_price',$data['price']);
+       update_post_meta($post_id,'price',$data['price']);
+       
+	   if( $data['product_ids'] ){
+		   //sub products
+		   
+		   $product_ids = explode(',',$data['product_ids']);
+		   $AppDB->where('product_id',$product_ids,'IN');
+		   //$AppDB->where('product_id',$data['product_id'],'!=');
+		   $sub_products = $AppDB->get($this->_table);
+	  
+		   
+		   $sells = [];
+		   $buys = [];
+		   foreach( $sub_products as $sub_product ){
+				if( $sub_product['sell_buy'] == '販売' ){
+					$sells[] = $sub_product;
+				}else{
+					$buys[] = $sub_product;
+				} 
+		   }
+		   
+		   usort($sells, [$this,'cmpDESC']);
+		   usort($buys, [$this,'cmpASC']);
+		   
+		   if( count($sells) ){
+				update_post_meta($post_id,'sell_items',count($sells));
+
+			   
+			   foreach( $sells as $i => $pr ){
+					$p_label = $this->wpGetLabelId($pr['quality']);
+					$p_price = str_replace(',','',$pr['price']);
+
+					$p_title = $pr['store_name'];
+					$p_link  = $pr['store_link'];
+
+					update_post_meta($post_id,'sell_items_'.$i.'_label',$p_label);
+					update_post_meta($post_id,'sell_items_'.$i.'_price',$p_price);
+					update_post_meta($post_id,'sell_items_'.$i.'_title',$p_title);
+					update_post_meta($post_id,'sell_items_'.$i.'_link',$p_link);
+			   }
+		   }
+
+		   if( count($buys) ){
+				update_post_meta($post_id,'buy_items',count($buys));
+
+
+				foreach( $buys as $i => $pr ){
+					$p_label = $this->wpGetLabelId($pr['quality']);
+					$p_price = str_replace(',','',$pr['price']);
+
+					$p_title = $pr['store_name'];
+					$p_link  = $pr['store_link'];
+
+					
+					update_post_meta($post_id,'buy_items_'.$i.'_label',$p_label);
+					update_post_meta($post_id,'buy_items_'.$i.'_price',$p_price);
+					update_post_meta($post_id,'buy_items_'.$i.'_title',$p_title);
+					update_post_meta($post_id,'buy_items_'.$i.'_link',$p_link);
+				}
+			}
+	   }
+       
+		
+		return $post_id;
+
+       
+        var_dump($post_id);
+       echo '<pre>';
+       print_r($sub_products);
+       print_r($buys);
+       print_r($sells);
+       die();
+   }
+
+   function wpGetLabelId($label){
+        $term = term_exists( $label, 'product_label' );
+        if( !$term && $label){
+            $term_id = wp_insert_term(
+                $label,
+                'product_label'
+            );
+        }else{
+            $term_id = $term['term_id'];
+        }
+
+        return (int)$term_id;
+   }
+   
+   function wpUpdateData( $post_id,$data ){
+       if( $data['product_name'] ){
+           $title = $data['product_name'];
+       }else{
+           $title = 'Product ID #'.$data['product_id'];
+       }
+       
+       $product_args = [
+           'post_title' => $title,
+           'post_status' => 'publish',
+           'post_type' => 'product',
+           'post_author' => 1
+       ];
+   }
+}

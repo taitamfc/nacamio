@@ -1,0 +1,101 @@
+<?php
+// Add custom Theme Functions here
+
+function remove_query_strings() {
+   if(!is_admin()) {
+       add_filter('script_loader_src', 'remove_query_strings_split', 15);
+       add_filter('style_loader_src', 'remove_query_strings_split', 15);
+   }
+}
+
+function remove_query_strings_split($src){
+   $output = preg_split("/(&ver|\?ver)/", $src);
+   return $output[0];
+}
+add_action('init', 'remove_query_strings');
+
+add_filter( 'the_content', 'theme_replace_site_domain' );
+
+function theme_replace_site_domain($content){
+	$urlparts = parse_url(site_url());
+	$domain = $urlparts ['host'];
+
+	$content = str_replace('__SITE_DOMAIN__',$domain,$content);
+	$content = str_replace('__SITE_NAME__',$domain,$content);
+	return $content;
+}
+
+add_action( 'woocommerce_checkout_order_review', 'theme_woocommerce_order_review', 11 );
+function theme_woocommerce_order_review(){
+	echo do_shortcode('[order_tip_form]');
+}
+
+function theme_pre_get_posts( $query ) {
+  if ($query->is_main_query()) {
+    if( isset($_GET['swoof']) ){
+      $query->set('tax_query',null);
+      //code search color and size here
+      $pa_color         = isset( $_GET['pa_color'] ) ? $_GET['pa_color'] : '';
+      $pa_size          = isset( $_GET['pa_size'] ) ? $_GET['pa_size'] : '';
+      
+      $pa_color_name    = get_term_by('slug',$pa_color,'pa_color')->name;
+      $pa_size_name     = get_term_by('slug',$pa_size,'pa_size')->name;
+
+      $really_curr_tax  = isset( $_GET['really_curr_tax'] ) ? $_GET['really_curr_tax'] : '';
+      $category_id      = current( explode('-', $really_curr_tax) );
+      $category_tax     = 'product_cat';
+
+      // global $wpdb;
+      // $sql = "SELECT products.id,products.wordpress_post_id FROM products
+      // JOIN {$wpdb->prefix}term_relationships ON products.wordpress_post_id = {$wpdb->prefix}term_relationships.object_id
+      // WHERE products.wordpress_post_id IS NOT NULL AND term_taxonomy_id = $category_id";
+
+
+
+      // echo $sql;
+      // die();
+
+
+      // $query->set('post__in',[196]);
+    } 
+  }
+}
+//add_action( 'pre_get_posts', 'theme_pre_get_posts', 99999999999999 );
+
+//remove pa_ to use pre_get_posts
+function theme_remove_pa( $query_vars ){
+  if( isset($_GET['swoof']) ){
+    if( !empty($query_vars['pa_color']) ){
+        $query_vars['pa_color']='';
+    }
+    if( !empty($query_vars['pa_size']) ){
+        $query_vars['pa_size']='';
+    }
+  }
+  return $query_vars;
+
+}
+//add_filter( 'request', 'theme_remove_pa' );
+
+//search multi keywords
+function theme_posts_search( $search, $wp_query )
+{
+    global $wpdb;
+    if(empty($search)) {
+        return $search;
+    }
+    if ( $wp_query->is_search() && $wp_query->get('post_type') == 'product') {
+      $search = $wp_query->get('s');
+			$search = trim($search);
+			$search_arr = explode(' ',$search);
+      $or_condition = [];
+       if( count($search_arr) > 1 ){
+        foreach ($search_arr as $key => $value){
+          $or_condition[] = " $wpdb->posts.post_title LIKE '%$value%' ";
+				}
+        $search = " AND ( ". implode(' OR ',$or_condition) ." )";
+      }
+    }
+    return $search;
+}
+add_filter('posts_search', 'theme_posts_search', 500, 2);

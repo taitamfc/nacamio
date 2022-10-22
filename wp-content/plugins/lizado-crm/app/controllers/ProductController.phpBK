@@ -1,0 +1,139 @@
+<?php
+class ProductController extends CRController {
+    private $_tbl_products       = '';
+    function __construct(){
+        global $wpdb;
+        $this->_tbl_products = 'products';
+        $this->_tbl_product_childs = 'product_childs';
+
+        $this->_import_url = AppUrlHelper::ajaxBuild([
+            'controller'    => 'product',
+            'task'          => 'ajax_import'
+        ]);
+    }
+    public function show() {
+        global $AppDB;
+        $id = empty( $_GET['id'] ) ? 1 : $_GET['id'];
+        $AppDB->where('id',$id);
+        $object = $AppDB->ObjectBuilder()->getOne($this->_tbl_products);
+
+        $AppDB->where('product_id',$id);
+        $sub_products = $AppDB->ObjectBuilder()->get($this->_tbl_product_childs);
+        
+        $params = [
+            'item'                 => $object,
+            'sub_products'         => $sub_products,
+        ];
+        apr($params);
+        
+    }
+    public function index( $pass = '' ) {
+      global $AppDB;
+      //get items
+      $page = empty( $_GET['pageno'] ) ? 1 : $_GET['pageno'];
+
+      $AppDB->pageLimit = 100;
+      $objects = $AppDB->ObjectBuilder()->paginate($this->_tbl_products.' as p', $page);
+      $items['objects']       = $objects;
+      $items['total_pages']   = $AppDB->totalPages;
+      $items['page']          = $page;
+
+      $params = [
+          'items'                 => $items,
+          'ajax_import_url'       => $this->_import_url,
+      ];
+      //$this->setView('Product/index',$params);
+    }
+
+    public function ajax_import(){
+        global $AppDB;
+        $id = empty( $_GET['id'] ) ? 1 : $_GET['id'];
+        $AppDB->where('id',$id);
+        $item = $AppDB->ObjectBuilder()->getOne($this->_tbl_products);
+        
+        //insert to woo
+        $post_id = wp_insert_post( array(
+            'post_title' => $item->title,
+            'post_type' => 'product',
+            'post_status' => 'publish',
+            'post_content' => $item->description,
+        ));
+        $product = new WC_Product_Advanced( $post_id );
+        $product->set_regular_price( $item->price );
+        // $product->set_price( $item->price );
+        if($item->price_sale){
+            $product->set_sale_price( $item->price_sale );
+        }
+        $product->save();
+
+        //update product_system_id
+        update_post_meta($post_id,'product_system_id',$id);
+        update_post_meta($post_id,'product_system_image',$item->image_url);
+        //update products
+        $AppDB->where('id',$id);
+        $AppDB->update( $this->_tbl_products, ['wordpress_post_id' => $post_id] );
+
+        //update category
+        if( term_exists( $item->product_type, 'product_cat' ) ){
+            wp_set_object_terms( $post_id, $item->product_type, 'product_cat', true );
+        }else{
+            $new_term = wp_insert_term(
+                $item->product_type,   // the term 
+                'product_cat'
+            );
+            wp_set_object_terms( $post_id, $new_term['term_id'], 'product_cat', true );
+        }
+
+        //update attributes
+        $object = WoocommerceHelper::get_system_product($post_id,['id','title'],true,false);
+        if( $object->pa_size ){
+            $object->pa_size = count($object->size_supported) ? $object->size_supported : $object->pa_size;
+            $attributes_data = array(
+                array('name'=>'Size',  'options' => $object->pa_size, 'visible' => 1, 'variation' => 1 ),
+                array('name'=>'Color', 'options' => $object->pa_color, 'visible' => 1, 'variation' => 1 )
+            );
+            if( sizeof($attributes_data) > 0 ){
+                $attributes = array(); // Initializing
+            
+                // Loop through defined attribute data
+                foreach( $attributes_data as $key => $attribute_array ) {
+                    if( isset($attribute_array['name']) && isset($attribute_array['options']) ){
+                        $taxonomy = 'pa_' . wc_sanitize_taxonomy_name( $attribute_array['name'] );
+                        $option_term_ids = array(); // Initializing
+                        foreach( $attribute_array['options'] as $option ){
+                            if( term_exists( $option, $taxonomy ) ){
+                                wp_set_object_terms( $post_id, $option, $taxonomy, true );
+                            }else{
+                                $new_term = wp_insert_term(
+                                    $option,   // the term 
+                                    $taxonomy
+                                );
+                                wp_set_object_terms( $post_id, $option, $taxonomy, true );
+                            }
+                            // Get the term ID
+                            $option_term_ids[] = get_term_by( 'name', $option, $taxonomy )->term_id;
+                        }
+                    }
+                    // Loop through defined attribute data
+                    $attributes[$taxonomy] = array(
+                        'name'          => $taxonomy,
+                        'value'         => $option_term_ids, // Need to be term IDs
+                        'position'      => $key + 1,
+                        'is_visible'    => $attribute_array['visible'],
+                        'is_variation'  => $attribute_array['variation'],
+                        'is_taxonomy'   => '1'
+                    );
+                }
+                // Save the meta entry for product attributes
+                update_post_meta( $post_id, '_product_attributes', $attributes );
+            }
+        }
+        
+
+        $return['post_id'] = $post_id;
+        $return['product_system_id'] = $id;
+        $return['status'] = 1;
+        echo json_encode($return);
+        die();
+    }
+}

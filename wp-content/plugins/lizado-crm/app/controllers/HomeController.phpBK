@@ -1,0 +1,12 @@
+<?php
+class HomeController extends CRController {
+    public function index( $pass = '' ) {
+      $url = AppUrlHelper::build([
+        'controller'    => 'product',
+        'action'          => 'index'
+      ]);
+      $this->redirect( $url );
+      $params = [];
+      $this->setView('Home/index',$params);
+    }
+}
